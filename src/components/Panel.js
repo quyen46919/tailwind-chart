@@ -1,12 +1,160 @@
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DataTable from './DataTable';
 import Pie2DChart from './Pie2DChart';
 import InfoLine from './InfoLine';
 import LineMixChart from './LineMixChart';
+import { returnValues } from '../dataset';
+import { cloneDeep } from 'lodash';
+import { groupObjectByField } from '../utils/groupObjectByField';
 
 function Panel(props) {
+    const [values, setValues] = useState([]);
+    const [selectedDistrict, setSelectedDistrict] = useState('Liên Chiểu');
+    const [chartValues, setChartValues] = useState({
+        series: [{
+            name: 'Diện tích',
+            type: 'column',
+            data: []
+        }, {
+            name: 'Giá',
+            type: 'line',
+            data: []
+        }],
+        options: {
+            chart: {
+                height: 350,
+                type: 'line',
+            },
+            stroke: {
+                width: [0, 4]
+            },
+            dataLabels: {
+                enabled: true,
+                enabledOnSeries: [1]
+            },
+            labels: [],
+            xaxis: {
+                type: 'datetime'
+            },
+            yaxis: [{
+                title: {
+                text: 'Diện tích',
+                },
+            
+            }, {
+                opposite: true,
+                title: {
+                text: 'Giá'
+                }
+            }]
+        },
+    });
+
+    const calculateData = () => {
+        const rawValues = cloneDeep(returnValues);
+        // Loại bỏ những trường có price = "Gía thỏa thuận"
+        const filterPriceValues = rawValues.filter((row) => row.price !== "Giá thỏa thuận");
+        console.log('filterPriceValues: ', filterPriceValues);
+
+        const cloneValues = filterPriceValues.filter((row) => row.distCity.includes(selectedDistrict));
+        console.log('cloneValues: ', cloneValues);
+
+        // đổi các giá trị productArea và price từ string sang number
+        cloneValues.forEach(function(row) {
+            const x = row.productArea.split(" ")[0];
+            row.productArea = parseFloat(x);
+
+            // kiếm soát các trường hợp ở đây
+            // nếu chuỗi có "triệu/m2" tức là đó chưa phải giá cuối cùng, cần lấy số đó nhân với 1 triệu
+            if (row.price.includes("triệu/m²")) {
+                const y = row.price.split(" ")[0] * 1000000;
+                row.price = parseInt(parseFloat(y) * row.productArea);
+            } else {
+                // còn nếu có "tỷ" thì lấy giá trị nhân với 1000000000
+                const z = row.price.split(" ")[0];
+                row.price = parseInt(parseFloat(z) * 1000000000);
+            }
+
+            // Lấy ra quận chính xác
+            row.distCity = row.distCity.split(",")[0];
+        });
+
+        const priceArray = groupObjectByField(cloneValues, 'uptime', 'price');
+        const pricePerMonth = Object.entries(priceArray).sort().map(value => value[1]);
+        const pricePerMonthLabel = Object.entries(priceArray).sort().map(function(value) {
+            const arr = value[0].split("/");
+            arr[1] = 'June';
+            return arr.join(" ");
+        });
+        // console.log('pricePerMonth =', pricePerMonth);
+        // console.log('pricePerMonthLabel =', pricePerMonthLabel);
+
+        const areaArray = groupObjectByField(cloneValues, 'uptime', 'productArea');
+        const areaPerMonth = Object.entries(areaArray).sort().map(value => value[1]);
+        // console.log('areaPerMonth =', areaPerMonth);
+
+        setChartValues({ 
+            series: [{
+                name: 'Diện tích (m²)',
+                type: 'column',
+                data: areaPerMonth
+            }, {
+                name: 'Giá (vnđ)',
+                type: 'line',
+                data: pricePerMonth
+            }],
+            options: {
+                chart: {
+                    height: 350,
+                    type: 'line',
+                },
+                stroke: {
+                    width: [0, 4]
+                },
+                dataLabels: {
+                    enabled: true,
+                    enabledOnSeries: [1]
+                },
+                labels: pricePerMonthLabel,
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        format: 'dd MM yyyy'
+                    }
+                },
+                yaxis: [{
+                    title: {
+                        text: 'Diện tích',
+                    },
+                
+                }, {
+                    opposite: true,
+                    title: {
+                        text: 'Giá'
+                    }
+                }]
+            }
+        });
+
+        setValues(cloneValues);
+    }
+
+    useEffect(() => {
+        calculateData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        calculateData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedDistrict]);
+
+    const handleSelectDistrictChange = (e) => {
+        setSelectedDistrict(e.target.value);
+    };
+
     return (
         <div className='w-5/6 h-[100vh] py-4 px-10 overflow-y-scroll scrollbar'>
             {/* HEADER */}
@@ -46,19 +194,23 @@ function Panel(props) {
                             ease-in-out
                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
                             aria-label="Default select example"
-                            defaultValue="1"
+                            value={selectedDistrict}
+                            onChange={handleSelectDistrictChange}
                             >
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option value="Hải Châu">Hải Châu</option>
+                            <option value="Cẩm Lệ">Cẩm Lệ</option>
+                            <option value="Thanh Khê">Thanh Khê</option>
+                            <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
+                            <option value="Liên Chiểu">Liên Chiểu</option>
+                            <option value="Hòa Vang">Hòa Vang</option>
+                            <option value=">Sơn Trà">Sơn Trà</option>
                         </select>
                     </div>
-                    <LineMixChart/>
+                    <LineMixChart chartValues={chartValues}/>
                 </div>
                 <div className="w-2/5 h-full flex flex-col items-start">
                     <p className="font-medium text-md">Porfolio Summary</p>
-                    <DataTable/>
+                    <DataTable values={values}/>
                 </div>
             </div>
             {/* END CHART */}

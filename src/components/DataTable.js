@@ -1,64 +1,65 @@
 import React from 'react';
 import { formatCurrency } from '../utils/formatCurrency';
 
-const seedData = [
-    {
-        id: 1,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 320000000,
-        acreage: 32
-    },
-    {
-        id: 2,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 320000000,
-        acreage: 32
-    },
-    {
-        id: 3,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 1320000000,
-        acreage: 32
-    },
-    {
-        id: 4,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 890000000,
-        acreage: 32
-    },
-    {
-        id: 5,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 880000000,
-        acreage: 32
-    },
-    {
-        id: 6,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 325000000,
-        acreage: 32
-    },
-    {
-        id: 7,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 220000000,
-        acreage: 32
-    },
-    {
-        id: 8,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 120000000,
-        acreage: 32
-    },
-    {
-        id: 9,
-        address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
-        price: 120000000,
-        acreage: 32
-    }
-];
+// const seedData = [
+//     {
+//         id: 1,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 320000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 2,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 320000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 3,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 1320000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 4,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 890000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 5,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 880000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 6,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 325000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 7,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 220000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 8,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 120000000,
+//         acreage: 32
+//     },
+//     {
+//         id: 9,
+//         address: '02 Cống Quỳnh, quận Cẩm Lệ, thành phố Đà Nẵng',
+//         price: 120000000,
+//         acreage: 32
+//     }
+// ];
 
-function DataTable() {
+function DataTable(props) {
+    const { values } = props;
     return (
         <div className="w-full flex flex-col border border-gray-200 rounded-lg mt-3">
             <div className=" sm:-mx-6 lg:-mx-8">
@@ -84,19 +85,19 @@ function DataTable() {
                             </thead>
                             <tbody>
                                 {
-                                    seedData.map((row, index) => (
-                                        <tr key={row.id}>
+                                    values.map((row, index) => (
+                                        <tr key={index}>
                                             <td className="px-5 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                 {index + 1}
                                             </td>
-                                            <td className="max-w-[180px] text-sm text-gray-900 font-light px-5 py-4 pl-1">
-                                                <p className="truncate text-ellipsis overflow-hidden">{row.address}</p>
+                                            <td className="max-w-[160px] text-sm text-gray-900 font-light py-4 pl-1 pr-0">
+                                                <p className="truncate text-ellipsis overflow-hidden">{row.title}</p>
                                             </td>
                                             <td className="text-sm text-gray-900 font-light px-5 py-4 whitespace-nowrap">
                                                 {formatCurrency(row.price)}
                                             </td>
                                             <td className="text-sm text-gray-900 font-light px-5 py-4 whitespace-nowrap">
-                                                {row.acreage} m2
+                                                {row.productArea} m²
                                             </td>
                                         </tr>
                                     ))
