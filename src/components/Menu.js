@@ -50,12 +50,12 @@ const routes = [
 
 function Menu(props) {
     return (
-        <div className="w-1/6 min-w-1/6 min-h-full px-10 py-4 bg-[#F0F9F8]">
+        <div className="w-1/6 min-w-1/6 min-h-full px-10 py-8 bg-[#F0F9F8]">
             <div className="font-medium text-gray-900 text-3xl">
-                Stockit
+                BĐS-ĐN
             </div>
             <button className="w-full px-4 py-2 bg-green-500 hover:bg-green-600 shadow-green-200 text-white rounded mt-2 transition-all">
-                Invest now
+                Đăng nhập
             </button>
             <p className="uppercase mt-5 text-gray-400 text-2sm group">Menu</p>
             <a href='/' className="group">
@@ -63,7 +63,7 @@ function Menu(props) {
                     <div className="h-10 w-2 rounded transform -translate-x-11 bg-green-300"></div>
                     <div className="flex flex-row items-center gap-3">
                         <FontAwesomeIcon icon={faChalkboard} className="-translate-y-0.5 text-green-500"/>
-                        <p className="text-green-500 font-semibold transition">Dashboard</p>
+                        <p className="text-green-500 font-semibold transition">Trang chủ</p>
                     </div>
                 </div>
             </a>

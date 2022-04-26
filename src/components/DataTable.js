@@ -63,7 +63,7 @@ function DataTable(props) {
     return (
         <div className="w-full flex flex-col border border-gray-200 rounded-lg mt-3">
             <div className=" sm:-mx-6 lg:-mx-8">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="py-2 min-w-full sm:px-6 lg:px-8">
                     <div className="overflow-x-hidden overflow-y-scroll max-h-[380px] 
                     scrollbar scrollbar-thumb-red-400 scrollbar-track-red-100">
                         <table className="min-w-full">
